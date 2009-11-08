@@ -1,0 +1,3 @@
+###read me
+
+1. rename settings.py.default to settings.py
