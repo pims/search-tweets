@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+# encoding: utf-8
+import os
+
+twitter_user = 'username'
+twitter_password = 'password'
+
+#production
+debug = False
+
+analytics = """
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-11436077-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+"""
+#development
+if os.environ['SERVER_SOFTWARE'].find('Development') >= 0:
+  debug = True
+  analytics = ""
