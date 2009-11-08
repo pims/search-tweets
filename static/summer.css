@@ -1,0 +1,76 @@
+/*
+Copyright (c) 2009, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.net/yui/license.txt
+version: 2.8.0r4
+*/
+html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}fieldset,img{border:0;}address,caption,cite,code,dfn,em,strong,th,var,optgroup{font-style:inherit;font-weight:inherit;}del,ins{text-decoration:none;}li{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}q:before,q:after{content:'';}abbr,acronym{border:0;font-variant:normal;}sup{vertical-align:baseline;}sub{vertical-align:baseline;}legend{color:#000;}input,button,textarea,select,optgroup,option{font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit;}input,button,textarea,select{*font-size:100%;}
+
+/*
+To browser “makers”:
+I really can’t wait for you to implement the CSS3 “standards”  because writing everything for Webkit AND Mozilla is a tad boring !
+kthxby
+*/
+
+
+html{background:#EEE;}
+body{background:#EEE;font-family:"Monaco","Consolas","Courier New";color:#333;}
+section,nav,footer{display:block;}
+/* a little touch of color ! */
+#line{
+  background: #FF54BE; /* will be overriden by non standard rules below */
+  background: -webkit-gradient(linear,left top, right top, from(#FF54BE), to(#FF54BE),color-stop(0.15, #FF90B6),color-stop(0.3, #FFACB3),color-stop(0.45, #FCCDB5),color-stop(0.6, #46D4D1),color-stop(0.75, #50C3E7),color-stop(0.9, #B195CB));
+  /*only works for FF 3.6, we’re ahead of our time here ! :) */
+  -moz-linear-gradient(left, right,from(#FF54BE),color-stop(0.15, #FF90B6),color-stop(0.3, #FFACB3),color-stop(0.45, #FCCDB5),color-stop(0.6, #46D4D1),color-stop(0.75, #50C3E7),color-stop(0.9, #B195CB),to(#FF54BE));height:6px;width:100%;}
+
+
+nav{
+  -webkit-transform: rotate(-0.2deg);
+  -moz-transform: rotate(-0.2deg);
+  height:2.5em;text-align:center;padding-top:0.5em;}
+
+#search{
+  -webkit-transform: rotate(0.2deg);
+  -moz-transform: rotate(0.2deg);
+  padding:10px;}
+
+.full{width:80%;}
+.box,.push{
+  -webkit-box-shadow:1px 1px 2px rgba(0,0,0,0.1);
+  -moz-box-shadow:1px 1px 2px rgba(0,0,0,0.1);
+  background:#FFF;margin:5px auto 10px auto;}
+
+.push{width:25%;float:left;height:8em;margin-right:1em;padding:1em;}
+
+#q{width:60%;margin-right:5%;padding:5px;font-size:110%;}
+#q + input{width:10%;}
+
+#promo{overflow:hidden;margin:0 auto;width:80%;text-align:center;}
+#promo div:nth-child(even){
+  -webkit-transform: rotate(1deg);
+  -moz-transform: rotate(1deg);
+  }
+#promo div:nth-child(odd){
+  -webkit-transform: rotate(-1deg);
+  -moz-transform: rotate(-1deg);
+  }
+a.home{text-decoration:none;color:#333;}
+footer{text-align:center;}
+footer span{font-size:90%;}
+.error{padding:5px;background:#FF0;}
+.highlight{background:#46D4D1;}
+.single-result{padding:5px;}
+.single-result span {color:#AAA;}
+.single-result a{color:#48CFD7;text-decoration:none;font-weight:bold;}
+.single-result a:after{content:"\2192";margin-left:1px;}
+
+#results div:nth-child(even){
+  -webkit-transform: rotate(0.2deg);
+  -moz-transform: rotate(0.2deg);
+  }
+  
+#results div:nth-child(odd){
+  -webkit-transform: rotate(-0.2deg);
+  -moz-transform: rotate(-0.2deg);
+  }
+.meta{text-align:center;}
