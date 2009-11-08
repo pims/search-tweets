@@ -1,4 +1,4 @@
-<!DOCTYPE html5>
+<!DOCTYPE html>
 <html lang="en-US">
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
