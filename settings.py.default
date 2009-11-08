@@ -4,7 +4,7 @@ import os
 
 twitter_user = 'username'
 twitter_password = 'password'
-index_token = ''
+index_token = 'token'
 
 #production
 debug = False
