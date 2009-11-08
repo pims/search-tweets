@@ -54,7 +54,7 @@ class SearchHandler(webapp.RequestHandler):
 
 class IndexHandler(webapp.RequestHandler):
   def get(self,username):
-    if self.request.get("token") == "0404":
+    if self.request.get("token") == settings.index_token:
       if index.run(username):
         self.redirect('/')
       else:
