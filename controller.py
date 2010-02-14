@@ -36,7 +36,7 @@ def template_path(name):
   
 class MainHandler(webapp.RequestHandler):
   def get(self):
-		template_data = dict(analytics=settings.analytics)
+		template_data = dict(analytics=settings.ANALYTICS)
 		self.response.out.write(template.render(template_path(name='home'), template_data))
 
 class SearchHandler(webapp.RequestHandler):
@@ -49,12 +49,12 @@ class SearchHandler(webapp.RequestHandler):
     else:
       error = u'the word you searched for isn\'t currently indexed, we think it doesn\'t make much sense, @pims if you think we should totally index it !'
     
-    template_data = {"page_title":"Home","results" : results,"error":error,"analytics":settings.analytics}
+    template_data = {"page_title":"Home","results" : results,"error":error,"analytics":settings.ANALYTICS}
     self.response.out.write(template.render(template_path(name='results'), template_data))
 
 class IndexHandler(webapp.RequestHandler):
   def get(self,username):
-    if self.request.get("token") == settings.index_token:
+    if self.request.get("token") == settings.INDEX_TOKEN:
       if index.run(username):
         self.redirect('/')
       else:
@@ -79,7 +79,7 @@ def main():
     ('/', MainHandler),
     ('/index/(.*)',IndexHandler)
     ]
-  application = webapp.WSGIApplication(urls,debug=settings.debug)
+  application = webapp.WSGIApplication(urls,debug=settings.DEBUG)
   wsgiref.handlers.CGIHandler().run(application)
 
 

@@ -2,14 +2,16 @@
 # encoding: utf-8
 import os
 
-twitter_user = 'username'
-twitter_password = 'password'
-index_token = 'token'
+TWITTER_USER = 'username'
+TWITTER_PASSWORD = 'password'
+INDEX_TOKEN = 'token'
+
+STATIC_DIR = '%s/static' % os.path.dirname(__file__)
 
 #production
-debug = False
+DEBUG = False
 
-analytics = """
+ANALYTICS = """
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
@@ -22,5 +24,5 @@ pageTracker._trackPageview();
 """
 #development
 if os.environ['SERVER_SOFTWARE'].find('Development') >= 0:
-  debug = True
-  analytics = ""
+  DEBUG = True
+  ANALYTICS = ""
