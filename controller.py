@@ -76,18 +76,10 @@ class IndexHandler(webapp.RequestHandler):
       search.index(username,data=data)
       self.response.out.write("yippie")
 
-class CheckHandler(webapp.RequestHandler):
-  def get(self,keyword):
-    tweets = bo.Tweet().all().filter('keywords =',keyword)
-    for tweet in tweets:
-      self.response.out.write(tweet.id)
-      self.response.out.write(','.join(tweet.keywords))
-
 def main():
   urls = [
     ('/search',SearchHandler),
     ('/index/(.*)',IndexHandler),
-    ('/check/(.*)',CheckHandler),
     ('/', MainHandler)
     ]
   application = webapp.WSGIApplication(urls,debug=settings.DEBUG)
