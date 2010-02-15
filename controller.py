@@ -23,11 +23,13 @@ import settings
 from utils import stopwords
 from utils import MemRedis
 
+from core import bo
 from core import search
 from core import index
 
 from google.appengine.ext.webapp import template
 from google.appengine.ext import webapp
+from google.appengine.ext.webapp.util import run_wsgi_app
 
 TEMPLATES_DIR = '%s/templates' % os.path.dirname(__file__)
 
@@ -73,14 +75,24 @@ class IndexHandler(webapp.RequestHandler):
       username = self.request.get("username")
       search.index(username,data=data)
       self.response.out.write("yippie")
+
+class CheckHandler(webapp.RequestHandler):
+  def get(self,keyword):
+    tweets = bo.Tweet().all().filter('keywords =',keyword)
+    for tweet in tweets:
+      self.response.out.write(tweet.id)
+      self.response.out.write(','.join(tweet.keywords))
+
 def main():
   urls = [
     ('/search',SearchHandler),
-    ('/', MainHandler),
-    ('/index/(.*)',IndexHandler)
+    ('/index/(.*)',IndexHandler),
+    ('/check/(.*)',CheckHandler),
+    ('/', MainHandler)
     ]
   application = webapp.WSGIApplication(urls,debug=settings.DEBUG)
-  wsgiref.handlers.CGIHandler().run(application)
+  #wsgiref.handlers.CGIHandler().run(application)
+  run_wsgi_app(application)
 
 
 if __name__ == '__main__':

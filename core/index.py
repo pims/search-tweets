@@ -2,24 +2,22 @@
 # encoding: utf-8
 
 from core import bo
-from utils import MemRedis
 from utils import stopwords
 from utils.twitter import TwitterAPI
 
 import settings
 
-import codecs
 import logging
 import os
 
 from django.utils import simplejson
 from time import sleep
 
-def classify(s):
-  logging.info()
+def classify(s,word_log=False):
   s = s.lower()
   s = s.replace('|','')
-  chars = ['[',']','.','!','?',',','(',')','"','\'',':',u'…','&','-','~']
+  s = to_unicode_or_bust(s)
+  chars = ['[',']','.','!','?',',','(',')','"','\'',':',u'…','&','-','~',u'“',u'”']
   while len(s) > 0 and s[0] in chars:
     s = s[1:]
   
@@ -45,14 +43,7 @@ def fetch(user):
   return favorites
 
 def extract_words(s):
-  clean = []
-  try:
-    clean = [w for w in s.split()]
-  except:
-    raise
-    logging.info('wrong encoding at splitting')
-  return clean
-
+  return [w for w in s.split()]
 
 def to_unicode_or_bust(obj, encoding='utf-8'):
   if isinstance(obj, basestring):
@@ -60,27 +51,38 @@ def to_unicode_or_bust(obj, encoding='utf-8'):
       obj = unicode(obj, encoding)
   return obj
 
+def extract_and_clean_words(s,word_log=False):
+  words = []
+  for word in extract_words(s):
+    w = classify(word,word_log=word_log)
+    if w not in stopwords and w is not None:
+      words.append(w)
+  return list(set(words))
+
 def run(user):
   try:
     favorites = fetch(user)
     if len(favorites) > 0:
       for favorite in favorites:
-        #now we index “all” the words in that tweet
-        words = []
-        for word in extract_words(favorite['text']):
-          w = classify(word)
-          if w not in stopwords and w is not None:
-            words.append(w)
-        tweet = bo.Tweet(
-          key_name = str(favorite['id']),
-          id = favorite['id'],
-          #text = favorite['text'],
-          keywords = words,
-          user = favorite["user"]["screen_name"],
-          user_id = favorite["user"]["id"],
-          favorited_by = [user]
-        )
-        tweet.put()
+        existing_tweet = bo.Tweet.get_by_key_name(str(favorite['id']))
+        if existing_tweet is not None and user not in existing_tweet.favorited_by:
+          logging.info('%s also favorited tweet %s' % (user,favorite['id']))
+          existing_tweet.favorited_by.append(user)
+        else:
+          word_log = False
+          if favorite['id'] == 2451365592:
+            word_log = True
+          words = extract_and_clean_words(favorite['text'],word_log)
+          tweet = bo.Tweet(
+            key_name = str(favorite['id']),
+            id = favorite['id'],
+            text = favorite['text'],
+            keywords = words,
+            user = favorite["user"]["screen_name"],
+            user_id = favorite["user"]["id"],
+            favorited_by = [user]
+          )
+          tweet.put()
     return True
   except:
     raise
@@ -88,7 +90,7 @@ def run(user):
     return False
 
 def main():
-	run('pims')
+	print classify('“I say fuck the odds, we are doing it.” — @felixge #hellyeah')
 
 if __name__ == '__main__':
 	main()

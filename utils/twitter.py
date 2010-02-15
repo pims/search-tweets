@@ -39,6 +39,7 @@ class TwitterAPI(object):
     password_mgr.add_password(None, self.base_url,self.user,self.password)
     handler = urllib2.HTTPBasicAuthHandler(password_mgr)
     opener = urllib2.build_opener(handler)
+    opener.addheaders = [('User-agent ', 'favorites fetcher 0.1 http://searchtweets.appspot.com')]
     try:
       req = opener.open(self.base_url + url)
       if format == 'json':
