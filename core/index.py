@@ -46,12 +46,6 @@ def extract_words(s):
   # use re.split('\W+',s) ?
   return [w for w in s.split()]
 
-def to_unicode_or_bust(obj, encoding='utf-8'):
-  if isinstance(obj, basestring):
-    if not isinstance(obj, unicode):
-      obj = unicode(obj, encoding)
-  return obj
-
 def extract_and_clean_words(s):
   words = []
   for word in extract_words(s):
@@ -59,6 +53,12 @@ def extract_and_clean_words(s):
     if w not in stopwords and w is not None:
       words.append(w)
   return list(set(words))
+
+def to_unicode_or_bust(obj, encoding='utf-8'):
+  if isinstance(obj, basestring):
+    if not isinstance(obj, unicode):
+      obj = unicode(obj, encoding)
+  return obj
 
 def run(user):
   try:
@@ -70,7 +70,6 @@ def run(user):
           logging.info('%s also favorited tweet %s' % (user,favorite['id']))
           existing_tweet.favorited_by.append(user)
         else:
-          word_log = False
           words = extract_and_clean_words(favorite['text'])
           tweet = bo.Tweet(
             key_name = str(favorite['id']),
@@ -84,12 +83,11 @@ def run(user):
           tweet.put()
     return True
   except:
-    raise
     logging.error('tweet %s not properly indexed' % favorite["id"])
     return False
 
 def main():
-	print classify('“I say fuck the odds, we are doing it.” — @felixge #hellyeah')
+	pass
 
 if __name__ == '__main__':
 	main()
