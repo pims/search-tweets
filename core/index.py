@@ -13,7 +13,7 @@ import os
 from django.utils import simplejson
 from time import sleep
 
-def classify(s,word_log=False):
+def classify(s):
   s = s.lower()
   s = s.replace('|','')
   s = to_unicode_or_bust(s)
@@ -43,6 +43,7 @@ def fetch(user):
   return favorites
 
 def extract_words(s):
+  # use re.split('\W+',s) ?
   return [w for w in s.split()]
 
 def to_unicode_or_bust(obj, encoding='utf-8'):
@@ -51,10 +52,10 @@ def to_unicode_or_bust(obj, encoding='utf-8'):
       obj = unicode(obj, encoding)
   return obj
 
-def extract_and_clean_words(s,word_log=False):
+def extract_and_clean_words(s):
   words = []
   for word in extract_words(s):
-    w = classify(word,word_log=word_log)
+    w = classify(word)
     if w not in stopwords and w is not None:
       words.append(w)
   return list(set(words))
@@ -70,9 +71,7 @@ def run(user):
           existing_tweet.favorited_by.append(user)
         else:
           word_log = False
-          if favorite['id'] == 2451365592:
-            word_log = True
-          words = extract_and_clean_words(favorite['text'],word_log)
+          words = extract_and_clean_words(favorite['text'])
           tweet = bo.Tweet(
             key_name = str(favorite['id']),
             id = favorite['id'],
