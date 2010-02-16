@@ -69,6 +69,7 @@ def run(user):
         if existing_tweet is not None and user not in existing_tweet.favorited_by:
           logging.info('%s also favorited tweet %s' % (user,favorite['id']))
           existing_tweet.favorited_by.append(user)
+          existing_tweet.put()
         else:
           words = extract_and_clean_words(favorite['text'])
           tweet = bo.Tweet(
@@ -83,7 +84,7 @@ def run(user):
           tweet.put()
     return True
   except:
-    logging.error('tweet %s not properly indexed' % favorite["id"])
+    logging.error('tweet %s not properly indexed' % user)
     return False
 
 def main():
