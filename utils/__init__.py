@@ -2,6 +2,7 @@
 # encoding: utf-8
 from google.appengine.api import memcache
 import logging
+import random
 import os
 
 class Redis(object):
@@ -654,3 +655,11 @@ stopwords =     ['a',
     'yourselves',
     'z',
     'zero']
+
+def random_string():
+  _sidChars='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  chars = []
+  for i in range(0,4):
+    chars.append(random.choice(_sidChars))
+  
+  return ''.join(chars)
