@@ -19,7 +19,7 @@ except:
 
 
 class TwitterAPI(object):
-  base_url = 'http://twitter.com'
+  base_url = 'http://api.twitter.com/1'
   
   ratelimit_remaining = 150
   ratelimit_reset = 0
@@ -34,49 +34,23 @@ class TwitterAPI(object):
     logging.info(e)
     return None
     
-  def __fetch(self,url,format):
-    password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
-    password_mgr.add_password(None, self.base_url,self.user,self.password)
-    handler = urllib2.HTTPBasicAuthHandler(password_mgr)
-    opener = urllib2.build_opener(handler)
-    opener.addheaders = [('User-agent ', 'favorites fetcher 0.1 http://searchtweets.appspot.com')]
+  def __fetch(self,url):
+    headers = { 'User-Agent' : 'favorites fetcher 0.1 http://searchtweets.appspot.com' }
+    full_url = self.base_url + url
+    logging.info("Full url is : %s" % full_url)
+    req = urllib2.Request(full_url, None, headers)
     try:
-      req = opener.open(self.base_url + url)
-      if format == 'json':
-        return simplejson.loads(req.read())
-      else:
-        return req.read()
+      response = urllib2.urlopen(req)
+      return simplejson.loads(response.read())
     except urllib2.URLError, e:
-      logging.error(req.info())
-      self.__handle_error(e)
-    
+      logging.error(e)
+      return self.__handle_error(e)
   
-  def show_user(self,user=None,format='json'):
-    if user is None : user = self.user
-    __url = '/users/show/%s.%s' % (user,format)
-    twitter_user = self.__fetch(__url,format)
-    self.current_user = (user,twitter_user)
-    return twitter_user
-  
-  def favorites(self,user=None,format='json'):
-    if user is None : user = self.user
-    __url = '/favorites/%s.%s' % (user,format)
-    favorites = []
-    if user == self.current_user[0] and self.current_user[1]["favourites_count"] is not None:
-      num_favorites = min(100,self.current_user[1]["favourites_count"])
-      
-      if num_favorites % 20 == 0:
-        num_pages = num_favorites / 20
-      else:
-        num_pages = (num_favorites / 20) + 1
-      for i in range(1,num_pages+1):
-        url = "%s?page=%s" % (__url,i)
-        part = self.__fetch(url,format)
-        if part is not None and len(part) > 0:
-          favorites += part
-        else:
-          break
-      
+  def favorites(self,user):
+    __url = '/favorites/%s.json' % (user)
+    favorites = self.__fetch(__url)
+    if favorites is None:
+      return []
     return favorites
 
 def main():
